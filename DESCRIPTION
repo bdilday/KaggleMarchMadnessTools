@@ -1,0 +1,9 @@
+Package: KaggleMarchMadnessTools
+Title: Tools for Kaggle March Madness
+Version: 0.0.0.9000
+Authors@R: person("Ben", "Dilday", email = "first.last@example.com", role = c("aut", "cre"))
+Description: Tools for Kaggle March Madness
+Depends: R (>= 3.3.2)
+License: MIT
+Encoding: UTF-8
+LazyData: true
