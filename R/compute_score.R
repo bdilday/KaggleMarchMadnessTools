@@ -16,8 +16,8 @@ df_teams <- read_csv(paste0(data_path, 'Teams.csv'))
 
 get_current_results <- function() {
   commit_hash = '' # use this one for default. 
- commit_hash= 'af588b2a142efe8316293c78eff449af93492e46/'
-  
+# commit_hash= '3ce0dfcd3f69d29dec4345735ae5ce1cb6cc2c15/'
+
   current_result = read_csv(
     paste0('https://gist.githubusercontent.com/bdilday/ce511b1eedbebe8d908076e4ab7b0954/raw/',
            commit_hash,
