@@ -14,8 +14,8 @@ tourney_seeds <- read_csv(paste0(data_path, 'TourneySeeds.csv')) %>% filter(Seas
 tourney_slots <- read_csv(paste0(data_path, 'TourneySlots.csv')) %>% filter(Season==2017)
 df_teams <- read_csv(paste0(data_path, 'Teams.csv'))
 
-get_current_results <- function() {
-  commit_hash = '' # use this one for default. 
+get_current_results <- function(commit_hash='') {
+#  commit_hash = '' # use this one for default. 
 # commit_hash= '3ce0dfcd3f69d29dec4345735ae5ce1cb6cc2c15/'
 
   current_result = read_csv(
@@ -105,8 +105,8 @@ get_all_predictions <- function() {
   all_predictions
 }
 
-get_current_scores <- function() {
-  if (! 'current_results' %in% ls()) {
+get_current_scores <- function(current_results=NULL) {
+  if (is.null(current_results)) {
     current_results <- get_current_results()
   }
   all_predictions %>% merge(current_results, by="Id") %>%
@@ -119,11 +119,14 @@ top_results <- function(nresult=20, current_scores=NULL) {
     current_scores <- get_current_scores()
   }
 
-  current_scores %>% filter(!is.na(result)) %>% 
+  tmp <- current_scores %>% filter(!is.na(result)) %>% 
     mutate(game_score=-result*log(Pred)-(1-result)*log(1-Pred)) %>%
     group_by(file_id, file_name) %>%
     summarise(score=mean(game_score, na.rm=TRUE), n_games=sum(!is.na(result))) %>%
-    arrange(score) %>% head(nresult) %>% print.data.frame()
+    arrange(score)
+    
+    tmp %>% head(nresult) %>% print.data.frame()
+    tmp
 }
 
 
@@ -136,6 +139,7 @@ fuzzy_id <- function(team1, team2) {
 
   xx1 = df_teams %>% filter(grepl(team1, Team_Name, ignore.case=TRUE)) %>% mutate(Season=2017)
   xx2 = df_teams %>% filter(grepl(team2, Team_Name, ignore.case=TRUE)) %>% mutate(Season=2017)
+  
   tmp <- merge(xx1, xx2, by='Season', all=TRUE) %>%
     mutate(Id=paste('2017', Team_Id.x, Team_Id.y, sep='_')) %>%
     select(Id, Team_Name.x, Team_Name.y)
